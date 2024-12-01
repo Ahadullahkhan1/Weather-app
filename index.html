@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>weather app</title>
+    <style>
+      body {
+        background-color: #f2f2f2;
+        height: 90vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(255, 228, 196, 0.823);
+        gap: 50px;
+      }
+      video{
+        width: 100%;
+        height: 100vh;
+        z-index: -1;
+        position: absolute;
+        top: 0;
+        left: 0;
+        object-fit: cover;
+      }
+      form {
+        display: flex;
+        height: 300px;
+        width: 350px;
+        backdrop-filter: blur(10px) saturate(101%);
+    -webkit-backdrop-filter: blur(10px) saturate(101%);
+    background-color: rgba(255, 228, 196, 0.34);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.125);
+        align-items: center;
+        justify-content: center;
+        box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+      }
+      form button{
+        backdrop-filter: blur(10px) saturate(101%);
+    -webkit-backdrop-filter: blur(10px) saturate(101%);
+    background-color: rgba(255, 228, 196, 0.34);
+    /* border-radius: 12px; */
+        border: none;
+        outline: none;
+        padding: 20px;
+        box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1);
+        border-bottom-right-radius: 20px;
+        border-top-right-radius: 20px;
+      }
+      form input {
+        padding: 20px;
+        border: none;
+        border-top-left-radius: 20px;
+        border-bottom-left-radius: 20px;
+        background-color: bisque;
+        box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px) saturate(101%);
+    -webkit-backdrop-filter: blur(10px) saturate(101%);
+    background-color: rgba(255, 228, 196, 0.34);
+    /* border-radius: 12px; */
+        outline: none;
+      }
+      form input::placeholder {
+        color: black;
+        font-weight: 700;
+      } 
+      .Weather{
+        height: 200px;
+        backdrop-filter: blur(10px) saturate(101%);
+    -webkit-backdrop-filter: blur(10px) saturate(101%);
+    background-color: rgba(255, 228, 196, 0.34);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.125);
+        box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        /* width: 400px; */
+      }
+      .Weather img{
+        width: 20%;
+      }
+      .Weather h1{
+        font-size: 30px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+      .Weather p{
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 18px;
+      }
+    </style>
+  </head>
+  <body>
+    <video src="2025634-hd_1280_720_25fps.mp4" autoplay muted loop></video>
+    <div class="container">
+      <form id="form">
+        <input
+          type="text"
+          id="search"
+          name="name"
+          placeholder="Enter Any Country Name"
+        />
+        <button id="btn">Search</button>
+      </form>
+    </div>
+    <div class="Weather"></div>
+ 
+  </div>
+    <script>
+      //  Weather app
+      let form = document.getElementById("form");
+      let weather = document.querySelector(".Weather");
+      let getWeather = async (userName) => {
+        let response = await fetch(
+          `http://api.weatherapi.com/v1/current.json?key=9b4be8cc2ddc460993a141449242911&q=${userName}&aqi=no`
+        );
+        return await response.json();
+      };
+      function htmlRender(res) {
+        weather.innerHTML = `    
+    <h1>Weather in ${res.location.name}</h1>
+    <p>Temperature: ${res.current.temp_c}</p>
+<img src=${res.current.condition.icon} alt="">
+         
+        `;
+      }
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        let name = document.getElementById("search").value;
+        if (name == "") {
+          alert("Please enter your name");
+        } else {
+          getWeather(name)
+            .then((res) => {
+              htmlRender(res);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+        form.reset();
+      });
+      window.addEventListener("load", () => {
+        getWeather("pakistan")
+          .then((res) => {
+            htmlRender(res);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      });
+    </script>
+  </body>
+</html>
